@@ -45,7 +45,9 @@ public class UserServiceImpl implements UserService {
         user.setMaskedIp(null);
         user.setOriginalCountry(country);
 
-        return userRepository3.save(user);
+        userRepository3.save(user);
+
+        return user;
     }
 
     @Override
