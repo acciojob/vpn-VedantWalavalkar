@@ -16,7 +16,7 @@ public class ServiceProvider {
     @JoinColumn
     Admin admin;
 
-    @ManyToMany(mappedBy = "serviceProviderList",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "serviceProviders",cascade = CascadeType.ALL)
     List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
