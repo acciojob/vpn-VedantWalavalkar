@@ -83,43 +83,51 @@ public class ConnectionServiceImpl implements ConnectionService {
         User user = optionalUser.get();
 
         if(!user.getConnected())
+        {
             throw new Exception("Already disconnected");
-
+        }
         user.setConnected(false);
         user.setMaskedIp(null);
 
-        // set country
-        String originalIP = user.getOriginalIp().substring(0,3);
-        CountryName originalCountryName = null;
-        String countryCode = null;
-        if(originalIP.equals("001")) {
-            originalCountryName = CountryName.IND;
-            countryCode = originalCountryName.toCode();
-        }
-        else if(originalIP.equals("002"))
-        {
-            originalCountryName = CountryName.USA;
-            countryCode = originalCountryName.toCode();
-        }
-        else if(originalIP.equals("003"))
-        {
-            originalCountryName = CountryName.AUS;
-            countryCode = originalCountryName.toCode();
-        }
-        else if(originalIP.equals("004"))
-        {
-            originalCountryName = CountryName.CHI;
-            countryCode = originalCountryName.toCode();
-        }
-        else
-        {
-            originalCountryName = CountryName.JPN;
-            countryCode = originalCountryName.toCode();
-        }
-        Country country = user.getOriginalCountry();
-        country.setCode(countryCode);
-        country.setCountryName(originalCountryName);
-
+//        if(!user.getConnected())
+//            throw new Exception("Already disconnected");
+//
+//        user.setConnected(false);
+//        user.setMaskedIp(null);
+//
+//        // set country
+//        String originalIP = user.getOriginalIp().substring(0,3);
+//        CountryName originalCountryName = null;
+//        String countryCode = null;
+//        if(originalIP.equals("001")) {
+//            originalCountryName = CountryName.IND;
+//            countryCode = originalCountryName.toCode();
+//        }
+//        else if(originalIP.equals("002"))
+//        {
+//            originalCountryName = CountryName.USA;
+//            countryCode = originalCountryName.toCode();
+//        }
+//        else if(originalIP.equals("003"))
+//        {
+//            originalCountryName = CountryName.AUS;
+//            countryCode = originalCountryName.toCode();
+//        }
+//        else if(originalIP.equals("004"))
+//        {
+//            originalCountryName = CountryName.CHI;
+//            countryCode = originalCountryName.toCode();
+//        }
+//        else
+//        {
+//            originalCountryName = CountryName.JPN;
+//            countryCode = originalCountryName.toCode();
+//        }
+//        Country country = user.getOriginalCountry();
+//        country.setCode(countryCode);
+//        country.setCountryName(originalCountryName);
+//
+//        userRepository2.save(user);
         userRepository2.save(user);
 
         return user;
