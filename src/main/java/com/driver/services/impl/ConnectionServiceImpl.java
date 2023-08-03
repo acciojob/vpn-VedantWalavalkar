@@ -22,58 +22,59 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public User connect(int userId, String countryName) throws Exception{
-        Optional<User> optionalUser = userRepository2.findById(userId);
-        User user = optionalUser.get();
+        User user = userRepository2.findById(userId).get();
 
-        if(user.getConnected())
+        if(user.getMaskedIp() != null)
             throw new Exception("Already connected");
-
-        String cName = countryName.toUpperCase();
-
-        if(user.getOriginalCountry().getCountryName().toString().equals(cName))
+        else if(countryName.equalsIgnoreCase(user.getOriginalCountry().getCountryName().toString())){
             return user;
+        }
+        else {
+//        String cName = countryName.toUpperCase();
 
-        List<ServiceProvider> serviceProviderList = user.getServiceProviderList();
-        if(serviceProviderList.size() == 0)
-            throw new Exception("Unable to connect");
-        ServiceProvider selectedServiceProvider = new ServiceProvider();
-        Country selectedCountry = new Country();
-        for(ServiceProvider sp : serviceProviderList)
-        {
-            List<Country> countryList = sp.getCountryList();
-            for(Country cn : countryList){
-                if(cn.getCountryName().toString().equals(cName))
-                {
-                    selectedServiceProvider = sp;
-                    selectedCountry = cn;
-                    break;
+//        if(user.getOriginalCountry().getCountryName().toString().equals(cName))
+//            return user;
+
+            List<ServiceProvider> serviceProviderList = user.getServiceProviderList();
+            if (serviceProviderList == null)
+                throw new Exception("Unable to connect");
+            ServiceProvider selectedServiceProvider = null;
+            Country selectedCountry = null;
+            int minValue = Integer.MAX_VALUE;
+            for (ServiceProvider sp : serviceProviderList) {
+                List<Country> countryList = sp.getCountryList();
+                for (Country cn : countryList) {
+                    if (cn.getCountryName().toString().equalsIgnoreCase(countryName) && minValue > sp.getId()) {
+                        selectedServiceProvider = sp;
+                        selectedCountry = cn;
+                        minValue = sp.getId();
+                    }
                 }
             }
+
+            if (selectedServiceProvider == null)
+                throw new Exception("Unable to connect");
+
+            Connection connection = new Connection();
+            connection.setServiceProvider(selectedServiceProvider);
+            connection.setUser(user);
+
+            String maskedId = selectedCountry.getCode().toString() + "." + selectedServiceProvider.getId() + "." + user.getId();
+            user.setConnected(true);
+            user.setMaskedIp(maskedId);
+//        Country country = user.getOriginalCountry();
+//        country.setCountryName(selectedCountry.getCountryName());
+//        country.setCode(selectedCountry.getCode());
+//        user.setOriginalCountry(country);
+            user.getConnectionList().add(connection);
+
+            selectedServiceProvider.getConnectionList().add(connection);
+
+//        connectionRepository2.save(connection);
+            serviceProviderRepository2.save(selectedServiceProvider);
+            userRepository2.save(user);
+            return user;
         }
-
-        if(selectedServiceProvider == null)
-            throw new Exception("Unable to connect");
-
-        Connection connection = new Connection();
-        connection.setServiceProvider(selectedServiceProvider);
-        connection.setUser(user);
-
-        user.setConnected(true);
-        String maskedId = selectedCountry.getCode().toString() + "." + selectedServiceProvider.getId() + "." + user.getId();
-        user.setMaskedIp(maskedId);
-        Country country = user.getOriginalCountry();
-        country.setCountryName(selectedCountry.getCountryName());
-        country.setCode(selectedCountry.getCode());
-        user.setOriginalCountry(country);
-        user.getConnectionList().add(connection);
-
-        selectedServiceProvider.getConnectionList().add(connection);
-
-        connectionRepository2.save(connection);
-        serviceProviderRepository2.save(selectedServiceProvider);
-        User savedUser = userRepository2.save(user);
-
-        return user;
     }
     @Override
     public User disconnect(int userId) throws Exception
