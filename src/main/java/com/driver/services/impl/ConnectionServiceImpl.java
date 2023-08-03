@@ -33,7 +33,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(user.getOriginalCountry().getCountryName().toString().equals(cName))
             return user;
 
-        List<ServiceProvider> serviceProviderList = user.getServiceProviders();
+        List<ServiceProvider> serviceProviderList = user.getServiceProviderList();
         if(serviceProviderList.size() == 0)
             throw new Exception("Unable to connect");
         ServiceProvider selectedServiceProvider = new ServiceProvider();
@@ -154,7 +154,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         CountryName receiverCountryName = receiverCountry.getCountryName();
         ServiceProvider selectedServiceProvider = new ServiceProvider();
         Country selectedCountry = new Country();
-        List<ServiceProvider> serviceProviderList = sender.getServiceProviders();
+        List<ServiceProvider> serviceProviderList = sender.getServiceProviderList();
         for(ServiceProvider sp : serviceProviderList)
         {
             List<Country> countryList = sp.getCountryList();
