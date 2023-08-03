@@ -41,17 +41,14 @@ public class AdminServiceImpl implements AdminService {
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setName(providerName);
 
-        Optional<Admin> optionalAdmin = adminRepository1.findById(adminId);
-        Admin admin = optionalAdmin.get();
+        Admin admin= adminRepository1.findById(adminId).get();
 
         serviceProvider.setAdmin(admin);
         admin.getServiceProviders().add(serviceProvider);
 
-        Admin savedAdmin = adminRepository1.save(admin);
+        adminRepository1.save(admin);
 
-
-        return savedAdmin;
-
+        return admin;
     }
 
     @Override
