@@ -10,8 +10,6 @@ import com.driver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +40,10 @@ public class UserServiceImpl implements UserService {
 
 //        User savedUser = userRepository3.save(user);
         String orgId = country.getCode() +"."+ user.getId();
-        user.setOriginalIP(orgId);
+        user.setOriginalIp(orgId);
         user.setConnected(false);
-        user.setMaskedIP(null);
-        user.setCountry(country);
+        user.setMaskedIp(null);
+        user.setOriginalCountry(country);
 
         return userRepository3.save(user);
     }
@@ -59,11 +57,11 @@ public class UserServiceImpl implements UserService {
         ServiceProvider serviceProvider = optionalServiceProvider.get();
 
         user.getServiceProviderList().add(serviceProvider);
-        serviceProvider.getUserList().add(user);
+        serviceProvider.getUsers().add(user);
 
         ServiceProvider savedServiceProvider = serviceProviderRepository3.save(serviceProvider);
 
-        List<User> userList = savedServiceProvider.getUserList();
+        List<User> userList = savedServiceProvider.getUsers();
 
         return userList.get(userList.size() - 1);
     }

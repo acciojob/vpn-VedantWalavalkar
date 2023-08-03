@@ -14,14 +14,14 @@ public class User {
 
     String password;
 
-    String originalIP;
+    String originalIp;
 
-    String maskedIP;
+    String maskedIp;
 
     Boolean connected;
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    Country country;
+    Country originalCountry;
 
     @JoinColumn
     @ManyToMany
@@ -36,18 +36,18 @@ public class User {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.originalIP = originalIP;
-        this.maskedIP = maskedIP;
+        this.originalIp = originalIP;
+        this.maskedIp = maskedIP;
     }
 
     public User(int id, String username, String password, String originalIP, String maskedIP, Boolean connected, Country country) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.originalIP = originalIP;
-        this.maskedIP = maskedIP;
+        this.originalIp = originalIP;
+        this.maskedIp = maskedIP;
         this.connected = connected;
-        this.country = country;
+        this.originalCountry = country;
     }
 
     public int getId() {
@@ -74,20 +74,20 @@ public class User {
         this.password = password;
     }
 
-    public String getOriginalIP() {
-        return originalIP;
+    public String getOriginalIp() {
+        return originalIp;
     }
 
-    public void setOriginalIP(String originalIP) {
-        this.originalIP = originalIP;
+    public void setOriginalIp(String originalIp) {
+        this.originalIp = originalIp;
     }
 
-    public String getMaskedIP() {
-        return maskedIP;
+    public String getMaskedIp() {
+        return maskedIp;
     }
 
-    public void setMaskedIP(String maskedIP) {
-        this.maskedIP = maskedIP;
+    public void setMaskedIp(String maskedIp) {
+        this.maskedIp = maskedIp;
     }
 
     public Boolean getConnected() {
@@ -98,12 +98,12 @@ public class User {
         this.connected = connected;
     }
 
-    public Country getCountry() {
-        return country;
+    public Country getOriginalCountry() {
+        return originalCountry;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setOriginalCountry(Country originalCountry) {
+        this.originalCountry = originalCountry;
     }
 
     public List<ServiceProvider> getServiceProviderList() {

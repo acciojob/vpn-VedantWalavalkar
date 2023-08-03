@@ -2,20 +2,14 @@ package com.driver.services.impl;
 
 import com.driver.model.Admin;
 import com.driver.model.Country;
-import com.driver.model.CountryName;
 import com.driver.model.ServiceProvider;
 import com.driver.repository.AdminRepository;
 import com.driver.repository.CountryRepository;
 import com.driver.repository.ServiceProviderRepository;
 import com.driver.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.driver.transformers.CountryTransformer.countryNameToCountry;
@@ -51,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = optionalAdmin.get();
 
         serviceProvider.setAdmin(admin);
-        admin.getServiceProviderList().add(serviceProvider);
+        admin.getServiceProviders().add(serviceProvider);
 
         Admin savedAdmin = adminRepository1.save(admin);
 

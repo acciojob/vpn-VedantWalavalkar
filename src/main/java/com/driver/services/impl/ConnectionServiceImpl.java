@@ -8,7 +8,6 @@ import com.driver.services.ConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         String cName = countryName.toUpperCase();
 
-        if(user.getCountry().getCountryName().toString().equals(cName))
+        if(user.getOriginalCountry().getCountryName().toString().equals(cName))
             return user;
 
         List<ServiceProvider> serviceProviderList = user.getServiceProviderList();
@@ -61,11 +60,11 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         user.setConnected(true);
         String maskedId = selectedCountry.getCode().toString() + "." + selectedServiceProvider.getId() + "." + user.getId();
-        user.setMaskedIP(maskedId);
-        Country country = user.getCountry();
+        user.setMaskedIp(maskedId);
+        Country country = user.getOriginalCountry();
         country.setCountryName(selectedCountry.getCountryName());
         country.setCode(selectedCountry.getCode());
-        user.setCountry(country);
+        user.setOriginalCountry(country);
         user.getConnectionList().add(connection);
 
         selectedServiceProvider.getConnectionList().add(connection);
@@ -86,10 +85,10 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Already disconnected");
 
         user.setConnected(false);
-        user.setMaskedIP(null);
+        user.setMaskedIp(null);
 
         // set country
-        String originalIP = user.getOriginalIP().substring(0,3);
+        String originalIP = user.getOriginalIp().substring(0,3);
         CountryName originalCountryName = null;
         String countryCode = null;
         if(originalIP.equals("001")) {
@@ -116,7 +115,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             originalCountryName = CountryName.JPN;
             countryCode = originalCountryName.toCode();
         }
-        Country country = user.getCountry();
+        Country country = user.getOriginalCountry();
         country.setCode(countryCode);
         country.setCountryName(originalCountryName);
 
@@ -134,8 +133,8 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Cannot establish communication");
         User receiver = optionalReceiver.get();
 
-        Country senderCountry = sender.getCountry();
-        Country receiverCountry = receiver.getCountry();
+        Country senderCountry = sender.getOriginalCountry();
+        Country receiverCountry = receiver.getOriginalCountry();
 
         if(senderCountry.getCountryName() == receiverCountry.getCountryName())
             return sender;
