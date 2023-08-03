@@ -73,7 +73,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         serviceProviderRepository2.save(selectedServiceProvider);
         User savedUser = userRepository2.save(user);
 
-        return savedUser;
+        return user;
     }
     @Override
     public User disconnect(int userId) throws Exception
@@ -119,7 +119,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         country.setCode(countryCode);
         country.setCountryName(originalCountryName);
 
-        return userRepository2.save(user);
+        userRepository2.save(user);
+
+        return user;
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
