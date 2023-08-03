@@ -65,6 +65,6 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList = savedServiceProvider.getUsers();
 
-        return userList.get(userList.size() - 1);
+        return user;
     }
 }
