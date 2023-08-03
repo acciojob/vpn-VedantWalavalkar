@@ -143,11 +143,11 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         // connect sender to vpn of receiver's country
         try {
-             connect(senderId, receiverCountry.getCountryName().toString());
+             return connect(senderId, receiverCountry.getCountryName().toString());
         }
         catch (Exception e) {
             throw new Exception("Cannot establish communication");
         }
-        return sender;
+//        return sender;
     }
 }
