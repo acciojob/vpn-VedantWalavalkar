@@ -142,12 +142,55 @@ public class ConnectionServiceImpl implements ConnectionService {
             return sender;
 
         // connect sender to vpn of receiver's country
-        try {
-             return connect(senderId, receiverCountry.getCountryName().toString());
-        }
-        catch (Exception e) {
-            throw new Exception("Cannot establish communication");
-        }
+//        try {
+//             return connect(senderId, receiverCountry.getCountryName().toString());
+//        }
+//        catch (Exception e) {
+//            throw new Exception("Cannot establish communication");
+//        }
 //        return sender;
+
+        // connect sender to receiver's country
+        CountryName receiverCountryName = receiverCountry.getCountryName();
+        ServiceProvider selectedServiceProvider = new ServiceProvider();
+        Country selectedCountry = new Country();
+        List<ServiceProvider> serviceProviderList = sender.getServiceProviderList();
+        for(ServiceProvider sp : serviceProviderList)
+        {
+            List<Country> countryList = sp.getCountryList();
+            for(Country country : countryList)
+            {
+                if(country.getCountryName().equals(receiverCountryName))
+                {
+                    selectedServiceProvider = sp;
+                    selectedCountry = country;
+                    break;
+                }
+            }
+        }
+        if(selectedServiceProvider == null)
+            throw new Exception("Cannot establish communication");
+
+
+        Connection connection = new Connection();
+        connection.setServiceProvider(selectedServiceProvider);
+        connection.setUser(sender);
+
+        sender.setConnected(true);
+        String maskedId = selectedCountry.getCode().toString() + "." + selectedServiceProvider.getId() + "." + sender.getId();
+        sender.setMaskedIp(maskedId);
+        Country country = sender.getOriginalCountry();
+        country.setCountryName(selectedCountry.getCountryName());
+        country.setCode(selectedCountry.getCode());
+        sender.setOriginalCountry(country);
+        sender.getConnectionList().add(connection);
+
+        selectedServiceProvider.getConnectionList().add(connection);
+
+        connectionRepository2.save(connection);
+        serviceProviderRepository2.save(selectedServiceProvider);
+        userRepository2.save(sender);
+
+        return sender;
     }
 }
